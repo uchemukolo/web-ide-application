@@ -3,7 +3,6 @@ import { File, FolderStructure, FileTreeProps } from './WorkspaceContext';
 import { generateFolderStructure } from '../utils';
 import FolderTreeView from './FolderTreeView';
 import FileDetailsView from './FileDetailsView';
-import 'react-folder-tree/dist/style.css';
 import './Workspace.css';
 
 const Workspace: React.FC<FileTreeProps> = ({ files }) => {
@@ -11,37 +10,19 @@ const Workspace: React.FC<FileTreeProps> = ({ files }) => {
   const [value, setValue] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [folderStructure, setFolderStructure] = useState<FolderStructure>(
-    generateFolderStructure(files)
+    generateFolderStructure(files) // Generating the initial folder structure from files
   );
 
-  const handleChange = (value: string | undefined) => {
-    setValue(value);
-  };
-
-  const handleFileClick = (file: File) => {
-    const storedItem = localStorage.getItem(file.nodeData.name);
-    if (file.nodeData.type === 'file') {
-      if (storedItem) {
-        setSelectedFile({
-          ...file,
-          nodeData: {
-            ...file.nodeData,
-            contents: storedItem
-          }
-        });
-      } else {
-        setSelectedFile(file);
-      }
-    }
-  };
-
+  // Function to handle changes in the search input
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase().trim();
 
+    // Function to filter the folder structure based on the search query
     const filterFolder = (folder: FolderStructure): FolderStructure => {
       const filteredChildren = (folder.children || []).filter(child => {
         const nameMatch = child.name.toLowerCase().includes(query);
 
+        // Recursively filter folders and files based on the search query
         if (child.type === 'folder') {
           const filteredFolder = filterFolder(child);
           return (
@@ -67,17 +48,37 @@ const Workspace: React.FC<FileTreeProps> = ({ files }) => {
       };
     };
 
+    // Update the folder structure based on the filtered results
     const filteredStructure: FolderStructure = {
-      ...generateFolderStructure(files),
+      ...generateFolderStructure(files), // Generate a fresh folder structure
       children: (generateFolderStructure(files).children || []).map(child =>
         filterFolder(child)
       )
     };
 
-    setSearchQuery(query);
-    setFolderStructure(filteredStructure);
+    setSearchQuery(query); // Set the search query state
+    setFolderStructure(filteredStructure); // Update the folder structure state
   };
 
+  // Function to handle file click events
+  const handleFileClick = (file: File) => {
+    const storedItem = localStorage.getItem(file.nodeData.name);
+    if (file.nodeData.type === 'file') {
+      if (storedItem) {
+        setSelectedFile({
+          ...file,
+          nodeData: {
+            ...file.nodeData,
+            contents: storedItem
+          }
+        });
+      } else {
+        setSelectedFile(file);
+      }
+    }
+  };
+
+  // Function to handle changes in the file contents and save to localStorage
   useEffect(() => {
     if (selectedFile && value.length) {
       localStorage.setItem(selectedFile.nodeData.name, value);
@@ -87,25 +88,36 @@ const Workspace: React.FC<FileTreeProps> = ({ files }) => {
 
   return (
     <div className="workspace-container">
-      <div className="folder-tree">
+      <div className="folder-tree" data-testid="folder-tree">
+        {/* Search bar for filtering files */}
         <input
           type="text"
           placeholder="Search file..."
           value={searchQuery}
           onChange={handleSearch}
           className="search-bar"
+          data-testid="search-bar"
         />
+        {/* Component to display the folder structure */}
         <FolderTreeView
           folderStructure={folderStructure}
           onFileClick={handleFileClick}
         />
       </div>
-      <div className="file-details">
-        <FileDetailsView
-          selectedFile={selectedFile}
-          value={value}
-          onChange={handleChange}
-        />
+      <div className="file-details" data-testid="file-details">
+        {selectedFile ? (
+          // Component to display file details and contents
+          <FileDetailsView
+            selectedFile={selectedFile}
+            value={value}
+            onChange={setValue}
+          />
+        ) : (
+          // Placeholder when no file is selected
+          <div className="file-details-placeholder">
+            - Select a file to view its contents or type in the search bar to search for a file
+          </div>
+        )}
       </div>
     </div>
   );

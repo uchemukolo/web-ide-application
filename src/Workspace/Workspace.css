@@ -17,3 +17,7 @@
     border: 1px solid #ccc;
     margin-bottom: 5px;
 }
+.file-details-placeholder {
+    font-size: 18px;
+    color: #587bf8
+}

@@ -6,7 +6,7 @@ const FileDetailsView: React.FC<{
   selectedFile: File | null;
   value: string;
   onChange: (value: string | undefined) => void;
-}> = ({ selectedFile, value, onChange }) => {
+}> = ({ selectedFile, onChange }) => {
   return (
     <div>
       <div>{selectedFile?.nodeData.name}</div>

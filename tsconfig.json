@@ -6,7 +6,9 @@
     "jsx": "react",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": ["./typings", "./node_modules/@types"],
+    "types": ["jest", "node"]
   },
-  "include": ["src"]
+  "include": ["src", "typings/jest-dom.d.ts"]
 }
