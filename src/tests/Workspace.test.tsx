@@ -3,6 +3,8 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import files from '../defaultFiles';
 import Workspace from '../Workspace/Workspace';
 
+// unfrotunately the test is not running because of some issues with the jest configuration that i am not able to fix by myself
+// Setting up the test proved to be more difficult than I thought, I kept getting errors that I couldn't fix related to the 3rd party libraries used in the project
 describe('Workspace Component', () => {
   const mockFile = {
     name: 'File Name',

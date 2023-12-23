@@ -115,7 +115,8 @@ const Workspace: React.FC<FileTreeProps> = ({ files }) => {
         ) : (
           // Placeholder when no file is selected
           <div className="file-details-placeholder">
-            - Select a file to view its contents or type in the search bar to search for a file
+            - Select a file to view its contents or type in the search bar to
+            search for a file
           </div>
         )}
       </div>
