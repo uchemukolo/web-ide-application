@@ -1,5 +1,3 @@
-# Cytora Technical Assessment
-
 The objective of this assessment is to create a web based IDE based on a list of File objects. We want to build something like this, which you see in mode IDE environments:
 
 ![example](./example.png)
